@@ -19,34 +19,32 @@ BINARIES = \
 	fel-pio \
 	fel-copy
 
-cleangitignore:
-	rm -f .gitignore
 
-$(TOOLS): FORCE cleangitignore
-	$(MAKE) -C $@
+$(TOOLS): FORCE
+	$(MAKE) -C tools/$@
 tools:$(TOOLS)
 
 $(BINARIES): FORCE
-	$(MAKE) -C $@
+	$(MAKE) -C binaries/$@
 binaries:$(BINARIES)
 
 $(CROSS_TOOLS):FORCE
-	$(MAKE) -C $@
+	$(MAKE) -C tools/$@
 cross-tools:$(CROSS_TOOLS)
 
-clean-tools:
-	for d in $(TOOLS); do $(MAKE) -C $$d clean; done
+tools-clean:
+	for d in $(TOOLS); do $(MAKE) -C tools/$$d clean; done
 
-clean-binaries:
-	for d in $(BINARIES); do $(MAKE) -C $$d clean; done
+binaries-clean:
+	for d in $(BINARIES); do $(MAKE) -C binaries/$$d clean; done
 
-clean-cross-tools:
-	for d in $(CROSS_TOOLS); do $(MAKE) -C $$d clean; done
+cross-tools-clean:
+	for d in $(CROSS_TOOLS); do $(MAKE) -C tools/$$d clean; done
 
-install-tools:
-	for d in $(TOOLS); do $(MAKE) -C $$d install; done
+tools-install:
+	for d in $(TOOLS); do $(MAKE) -C tools/$$d install; done
 
-uninstall-tools:
-	for d in $(TOOLS); do $(MAKE) -C $$d uninstall; done
+tools-uninstall:
+	for d in $(TOOLS); do $(MAKE) -C tools/$$d uninstall; done
 
 FORCE:

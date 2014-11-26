@@ -1,6 +1,6 @@
 .DEFAULT: all
 
-all: $(TARGETS) $(EXTRA_DEPS) .gitignore
+all: $(TARGETS) $(EXTRA_DEPS)
 
 $(ELFS): $(SOURCES) $(LDSCRIPT)
 	$(CC) $(CFLAGS) $(SOURCES) -o $@ -T $(LDSCRIPT) -Wl,-N $(DEFINES)
@@ -11,7 +11,3 @@ $(TARGETS): $(ELFS)
 clean:
 	rm -f $(ELFS)
 	rm -f $(TARGETS)
-.gitignore: Makefile
-	@for x in $(ELFS) $(TARGETS); do \
-		echo "$$x"; \
-	done >> ../$@ 

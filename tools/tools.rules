@@ -4,7 +4,7 @@ EXTRA_DEPS += $(HEADERS)
 
 .DEFAULT: all
 
-all: $(TARGET) $(EXTRA_DEPS) .gitignore
+all: $(TARGET) $(EXTRA_DEPS)
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) -o $@ $^
@@ -17,11 +17,6 @@ clean:
 	rm -f $(OBJECTS)
 	rm -f $(TARGET)
 
-.gitignore: Makefile
-	@for x in $(OBJECTS) $(EXTRA_OBJECTS) $(TARGET); do \
-		echo "$$x"; \
-	done >> ../$@ 
-	
 install: $(TARGET) $(EXTRA_DEPS) 
 	install -o root -m 755 -t $(INSTALL_DIR) $(TARGET)
 
