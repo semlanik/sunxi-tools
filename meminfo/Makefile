@@ -1,10 +1,10 @@
+include ../tools.env
+
 TARGET = meminfo
 SOURCES = \
 	meminfo.c
+INSTALL_DIR = /usr/bin
 
 override CFLAGS := $(CFLAGS) -static
-ifeq ($(DEBUG),1)
-	override CFLAGS := $(CFLAGS) -g
-endif
 
-include $(PWD)/tools.rules
+include ../tools.rules

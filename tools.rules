@@ -1,15 +1,29 @@
-CC ?= gcc
-CFLAGS ?= -O0
-override CFLAGS := $(CFLAGS) -std=c99 -Wall -Wextra -D_POSIX_C_SOURCE=200112L
+OBJECTS=$(SOURCES:.c=.o)
+INCLUDES=-I. -Iinclude -I../include
+EXTRA_DEPS += $(HEADERS)
 
-ifeq ($(DEBUG),1)
-  override CFLAGS := $(CFLAGS) -g
-endif
+.DEFAULT: all
 
-ifdef CROSS_COMPILE
-	override CC := $(CROSS_COMPILE)$(CC)
-else
-	override CC := $(CHOST)$(CC)
-endif
+all: $(TARGET) $(EXTRA_DEPS) .gitignore
 
-include $(PWD)/basic.rules
+%.o: %.c
+	$(CC) -c $(CFLAGS) $(INCLUDES) -o $@ $^
+
+$(TARGET): $(OBJECTS) $(EXTRA_OBJECTS)
+	$(CC) -o $@ $^ $(LIBS)
+
+clean:
+	rm -f $(EXTRA_OBJECTS)
+	rm -f $(OBJECTS)
+	rm -f $(TARGET)
+
+.gitignore: Makefile
+	@for x in $(OBJECTS) $(EXTRA_OBJECTS) $(TARGET); do \
+		echo "$$x"; \
+	done >> ../$@ 
+	
+install: $(TARGET) $(EXTRA_DEPS) 
+	install -o root -m 755 -t $(INSTALL_DIR) $(TARGET)
+
+uninstall:
+	rm -f $(INSTALL_DIR)/$(TARGET)

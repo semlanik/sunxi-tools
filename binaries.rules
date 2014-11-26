@@ -1,6 +1,17 @@
-CC ?= gcc
-OBJCOPY ?= objcopy
-CROSS_COMPILE ?= arm-none-gnueabi-
-override CFLAGS := $(CFLAGS) -g -Os -fpic -fno-common -fno-builtin -ffreestanding -nostdinc -mno-thumb-interwork -Wall -Wstrict-prototypes -fno-stack-protector -Wno-format-nonliteral -Wno-format-security -fno-toplevel-reorder
-override CC := $(CROSS_COMPILE)$(CC)
-override OBJCOPY := $(CROSS_COMPILE)$(OBJCOPY)
+.DEFAULT: all
+
+all: $(TARGETS) $(EXTRA_DEPS) .gitignore
+
+$(ELFS): $(SOURCES) $(LDSCRIPT)
+	$(CC) $(CFLAGS) $(SOURCES) -o $@ -T $(LDSCRIPT) -Wl,-N $(DEFINES)
+
+$(TARGETS): $(ELFS)
+	$(OBJCOPY) -O binary $(subst .bin,.elf,$@) $@ 
+
+clean:
+	rm -f $(ELFS)
+	rm -f $(TARGETS)
+.gitignore: Makefile
+	@for x in $(ELFS) $(TARGETS); do \
+		echo "$$x"; \
+	done >> ../$@ 
